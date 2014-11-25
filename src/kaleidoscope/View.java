@@ -20,7 +20,7 @@ public class View extends JPanel implements Observer {
     
     /** This is what we will be observing. */
     Model model;
-
+    private Color color = Color.red;
     /**
      * Constructor.
      * @param model The Model whose working is to be displayed.
@@ -40,17 +40,14 @@ public class View extends JPanel implements Observer {
     public void paint(Graphics g) {    	
     	g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(Color.red);
-       // g.fillOval(model.getX(), model.getY(),
-         //      model.BALL_SIZE, model.BALL_SIZE);
-        
+        g.setColor(this.color); 
         List<List<Integer>> list = model.buildBalls(model.getX(), model.getY(), getWidth(), getHeight());
         for (int i = 0; i < list.size(); i++) {
     		g.fillOval(list.get(i).get(0), list.get(i).get(1),
                    model.BALL_SIZE, model.BALL_SIZE);           
     	}
     }
-  
+     
     /**
      * When an Observer notifies Observers (and this View is an Observer),
      * this is the method that gets called.
@@ -63,4 +60,13 @@ public class View extends JPanel implements Observer {
     public void update(Observable obs, Object arg) {
         repaint();
     }
+    
+    public Color getColor(){
+    	return color;
+    }
+    
+    public void setColor(Color color){
+    	this.color = color;
+    	repaint();
+    }    
 }

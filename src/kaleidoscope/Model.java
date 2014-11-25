@@ -24,6 +24,12 @@ public class Model extends Observable {
     private int yDelta = 8;
     private Timer timer;
 
+    
+    public void increaseDelta(){
+    	this.xDelta = xDelta + 1;
+    	this.yDelta = yDelta + 1;
+    }
+    
     /**
      * Sets the "walls" that the ball should bounce off from.
      * 
@@ -109,7 +115,6 @@ public class Model extends Observable {
     	list.add(ball6(x,y, width, height));
     	list.add(ball7(x,y, width, height));
     	list.add(ball8(x,y, width, height));
-     	
     	return list; 
     }
     

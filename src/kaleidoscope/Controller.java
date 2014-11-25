@@ -2,6 +2,7 @@ package kaleidoscope;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -25,6 +26,7 @@ public class Controller extends JFrame {
     JButton runButton = new JButton("Run");
     JButton stopButton = new JButton("Stop");
     JButton colorButton = new JButton("Change Color");
+    JButton switchButton = new JButton("Switch Direction");
     Timer timer;
 
     /** The Model is the object that does all the computations. It is
@@ -59,7 +61,7 @@ public class Controller extends JFrame {
     private void display() {
         layOutComponents();
         attachListenersToComponents();
-        setSize(300, 300);
+        setSize(500, 500);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -73,8 +75,8 @@ public class Controller extends JFrame {
         buttonPanel.add(runButton);
         buttonPanel.add(stopButton);
         buttonPanel.add(colorButton);
+        buttonPanel.add(switchButton);
         stopButton.setEnabled(false);
-        //view.repaint(Color.blue);
         this.add(BorderLayout.CENTER, view);
     }
     
@@ -105,11 +107,25 @@ public class Controller extends JFrame {
         colorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-            	colorButton.setEnabled(true);   	
-                model.pause();
+            	colorButton.setEnabled(true); 
+            	if (view.getColor() == Color.red) {
+            		view.setColor(Color.blue);
+            	}
+            	else {
+            		view.setColor(Color.red);
+            	}
             }
         });
         
+        //The fast button and slow button controls speed
+        switchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+            	switchButton.setEnabled(true); 
+            	model.increaseDelta();
+            }
+        });
+            
         // When the window is resized, the Model is given the new limits
         this.addComponentListener(new ComponentAdapter() {
             @Override
