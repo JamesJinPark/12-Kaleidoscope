@@ -26,14 +26,16 @@ public class Controller extends JFrame {
     JButton runButton = new JButton("Run");
     JButton stopButton = new JButton("Stop");
     JButton colorButton = new JButton("Change Color");
-    JButton switchButton = new JButton("Switch Direction");
+    JButton reflectButton = new JButton("Change Reflection");
     Timer timer;
 
     /** The Model is the object that does all the computations. It is
      * completely independent of the Controller and View objects. */
-    Model model;
+    Circle circle;
     /** The View object displays what is happening in the Model. */
     View view;
+    Square square;
+    Triangle triangle;
     
     /**
      * Runs the kaleidoscope program
@@ -49,10 +51,13 @@ public class Controller extends JFrame {
      * Sets up communication between the components.
      */
     private void init() {
-        model = new Model();     // The model is independent from the other classes
-        view = new View(model);  // The view needs to know what model to look at
-        model.addObserver(view); // The model needs to give permission to be observed
-        
+        circle = new Circle();     // The model is independent from the other classes
+        square = new Square();
+        triangle = new Triangle();
+        view = new View(circle, square, triangle);  // The view needs to know what model to look at
+        circle.addObserver(view); // The model needs to give permission to be observed
+        square.addObserver(view);
+        triangle.addObserver(view);        
     }
 
     /**
@@ -75,7 +80,7 @@ public class Controller extends JFrame {
         buttonPanel.add(runButton);
         buttonPanel.add(stopButton);
         buttonPanel.add(colorButton);
-        buttonPanel.add(switchButton);
+        buttonPanel.add(reflectButton);
         stopButton.setEnabled(false);
         this.add(BorderLayout.CENTER, view);
     }
@@ -90,7 +95,9 @@ public class Controller extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 runButton.setEnabled(false);
                 stopButton.setEnabled(true);
-                model.start();
+                circle.start();
+                square.start();
+                triangle.start();
             }
         });
         // The Stop button tells the Model to pause
@@ -99,7 +106,9 @@ public class Controller extends JFrame {
             public void actionPerformed(ActionEvent event) {
                 runButton.setEnabled(true);
                 stopButton.setEnabled(false);
-                model.pause();
+                circle.pause();
+                square.pause();
+                triangle.pause();
             }
         });
         
@@ -108,21 +117,35 @@ public class Controller extends JFrame {
             @Override
             public void actionPerformed(ActionEvent event) {
             	colorButton.setEnabled(true); 
-            	if (view.getColor() == Color.red) {
-            		view.setColor(Color.blue);
+            	if (view.getCircleColor() == Color.red) {
+            		view.setCircleColor(Color.blue);
             	}
             	else {
-            		view.setColor(Color.red);
+            		view.setCircleColor(Color.red);
+            	}
+            	if (view.getSquareColor() == Color.green){
+            		view.setSquareColor(Color.cyan);
+            	}
+            	else{
+            		view.setSquareColor(Color.green);
+            	}
+            	if (view.getTriangleColor() == Color.yellow){
+            		view.setTriangleColor(Color.magenta);
+            	}
+            	else{
+            		view.setTriangleColor(Color.yellow);
             	}
             }
         });
         
         //The fast button and slow button controls speed
-        switchButton.addActionListener(new ActionListener() {
+        reflectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-            	switchButton.setEnabled(true); 
-            	model.increaseDelta();
+            	reflectButton.setEnabled(true); 
+            	circle.changeDelta();
+            	square.changeDelta();
+            	triangle.changeDelta();
             }
         });
             
@@ -130,7 +153,9 @@ public class Controller extends JFrame {
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent arg0) {
-                model.setLimits(view.getWidth(), view.getHeight());
+                circle.setLimits(view.getWidth(), view.getHeight());
+                square.setLimits(view.getWidth(), view.getHeight());
+                triangle.setLimits(view.getWidth(), view.getHeight());
             }
         });
     }
